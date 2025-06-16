@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selector de Plato para Gravel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Selector de Plato para Gravel</h1>
+  <div id="app">
+    <section id="config">
+      <label>Platos disponibles:</label>
+      <div class="multiselect" id="platos"></div>
+
+      <label>Ancho del neumático:</label>
+      <div class="multiselect" id="neumaticos"></div>
+
+      <label>Cadencia mínima y máxima (rpm):</label>
+      <div class="cadencias">
+        <input type="range" id="cadenciaMin" min="60" max="120" value="80">
+        <span id="valCadMin">80</span> rpm
+        <input type="range" id="cadenciaMax" min="60" max="120" value="90">
+        <span id="valCadMax">90</span> rpm
+      </div>
+    </section>
+    <div id="tabla-resultados"></div>
+
+    <section style="margin-top: 40px">
+      <h2>Fórmula para calcular la velocidad en ciclismo</h2>
+      <p>
+        Para calcular la velocidad en ciclismo conociendo el piñón, el plato, la cadencia y el tamaño de la rueda:
+      </p>
+      <p><b>Variables:</b><br>
+      Plato (N): número de dientes del plato<br>
+      Piñón (M): número de dientes del piñón<br>
+      Cadencia (C): revoluciones por minuto (rpm)<br>
+      Diámetro de la rueda (D): en metros<br>
+      π ≈ 3.1416
+      </p>
+      <p>
+        <b>Fórmula:</b><br>
+        <code>S = (C × (N / M) × π × D × 60) / 1000</code><br>
+        <i>Donde S es la velocidad en km/h</i>
+      </p>
+      <p>
+        Esta fórmula calcula la velocidad ajustando según los desarrollos reales y el tamaño exacto de rueda incluyendo el neumático.
+      </p>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
