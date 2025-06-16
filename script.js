@@ -10,6 +10,10 @@ const cadenciaMaxInput = document.getElementById('cadenciaMax');
 const valCadMin = document.getElementById('valCadMin');
 const valCadMax = document.getElementById('valCadMax');
 
+let prevCadMin;
+let prevCadMax;
+
+
 function loadPreferences() {
   const saved = JSON.parse(localStorage.getItem('gravelPrefs') || '{}');
   if (saved.platos) saved.platos.forEach(v => {
@@ -47,6 +51,11 @@ function renderSelectores() {
   });
 
   loadPreferences();
+
+  
+  prevCadMin = +cadenciaMinInput.value;
+  prevCadMax = +cadenciaMaxInput.value;
+
   actualizarValores();
 }
 
@@ -89,6 +98,38 @@ function calcularYRenderizarTabla() {
   tablaResultados.innerHTML = html;
   savePreferences();
 }
+
+function ajustarCadenciaMin() {
+  const newMin = +cadenciaMinInput.value;
+  const delta = newMin - prevCadMin;
+  if (newMin > prevCadMax) {
+    let newMax = prevCadMax + delta;
+    newMax = Math.min(newMax, +cadenciaMaxInput.max);
+    cadenciaMaxInput.value = newMax;
+  }
+  prevCadMin = +cadenciaMinInput.value;
+  prevCadMax = +cadenciaMaxInput.value;
+  calcularYRenderizarTabla();
+}
+
+function ajustarCadenciaMax() {
+  const newMax = +cadenciaMaxInput.value;
+  const delta = newMax - prevCadMax;
+  if (newMax < prevCadMin) {
+    let newMin = prevCadMin + delta;
+    newMin = Math.max(newMin, +cadenciaMinInput.min);
+    cadenciaMinInput.value = newMin;
+  }
+  prevCadMin = +cadenciaMinInput.value;
+  prevCadMax = +cadenciaMaxInput.value;
+  calcularYRenderizarTabla();
+}
+
+renderSelectores();
+platosDiv.addEventListener('change', calcularYRenderizarTabla);
+neumaticosDiv.addEventListener('change', calcularYRenderizarTabla);
+cadenciaMinInput.addEventListener('input', ajustarCadenciaMin);
+cadenciaMaxInput.addEventListener('input', ajustarCadenciaMax);
 
 renderSelectores();
 platosDiv.addEventListener('change', calcularYRenderizarTabla);
