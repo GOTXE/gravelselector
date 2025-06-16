@@ -13,6 +13,7 @@ const valCadMax = document.getElementById('valCadMax');
 let prevCadMin;
 let prevCadMax;
 
+
 function loadPreferences() {
   const saved = JSON.parse(localStorage.getItem('gravelPrefs') || '{}');
   if (saved.platos) saved.platos.forEach(v => {
@@ -50,8 +51,11 @@ function renderSelectores() {
   });
 
   loadPreferences();
+
+  
   prevCadMin = +cadenciaMinInput.value;
   prevCadMax = +cadenciaMaxInput.value;
+
   actualizarValores();
 }
 
@@ -126,4 +130,10 @@ platosDiv.addEventListener('change', calcularYRenderizarTabla);
 neumaticosDiv.addEventListener('change', calcularYRenderizarTabla);
 cadenciaMinInput.addEventListener('input', ajustarCadenciaMin);
 cadenciaMaxInput.addEventListener('input', ajustarCadenciaMax);
+
+renderSelectores();
+platosDiv.addEventListener('change', calcularYRenderizarTabla);
+neumaticosDiv.addEventListener('change', calcularYRenderizarTabla);
+cadenciaMinInput.addEventListener('input', calcularYRenderizarTabla);
+cadenciaMaxInput.addEventListener('input', calcularYRenderizarTabla);
 

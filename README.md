@@ -5,8 +5,9 @@ Herramienta web para calcular la velocidad y desarrollo de una bicicleta de grav
 ## Uso
 
 Abra `index.html` en un navegador moderno. Seleccione uno o varios platos, el ancho de neumático y la cadencia mínima y máxima. La tabla resultante mostrará los metros avanzados por pedalada y el rango de velocidades posible.
-
+hirq6m-codex/dividir-y-mejorar-gravel_plato_selector
 Los controles de cadencia están sincronizados: si una barra sobrepasa a la otra, la segunda se ajusta de forma automática para mantener el orden.
+
 
 Las preferencias seleccionadas se guardan localmente para que se restauren en la siguiente visita.
 
