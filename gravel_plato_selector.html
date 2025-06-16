@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selector de Plato para Gravel</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+      padding: 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.2em;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    .multiselect label {
+      display: inline-block;
+      margin: 5px;
+      background: #e0e0e0;
+      padding: 6px 10px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .multiselect input[type="checkbox"],
+    .multiselect input[type="radio"] {
+      display: none;
+    }
+    .multiselect input[type="checkbox"]:checked + span,
+    .multiselect input[type="radio"]:checked + span {
+      background-color: #3498db;
+      color: white;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      text-align: center;
+      padding: 10px;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+    td div:first-child {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #2d3436;
+    }
+    td div:last-child {
+      font-size: 0.95em;
+      color: #0984e3;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Selector de Plato para Gravel</h1>
+  <div id="app">
+    <section>
+      <label>Platos disponibles:</label>
+      <div class="multiselect" id="platos"></div>
+
+      <label>Ancho del neumático:</label>
+      <div class="multiselect" id="neumaticos"></div>
+
+      <label>Cadencia mínima y máxima (rpm):</label>
+      <div style="display: flex; gap: 10px; align-items: center">
+        <input type="range" id="cadenciaMin" min="60" max="120" value="80">
+        <span id="valCadMin">80</span> rpm
+        <input type="range" id="cadenciaMax" min="60" max="120" value="90">
+        <span id="valCadMax">90</span> rpm
+      </div>
+    </section>
+    <div id="tabla-resultados"></div>
+
+    <section style="margin-top: 40px">
+      <h2>Fórmula para calcular la velocidad en ciclismo</h2>
+      <p>
+        Para calcular la velocidad en ciclismo conociendo el piñón, el plato, la cadencia y el tamaño de la rueda:
+      </p>
+      <p><b>Variables:</b><br>
+      Plato (N): número de dientes del plato<br>
+      Piñón (M): número de dientes del piñón<br>
+      Cadencia (C): revoluciones por minuto (rpm)<br>
+      Diámetro de la rueda (D): en metros<br>
+      π ≈ 3.1416
+      </p>
+      <p>
+        <b>Fórmula:</b><br>
+        <code>S = (C × (N / M) × π × D × 60) / 1000</code><br>
+        <i>Donde S es la velocidad en km/h</i>
+      </p>
+      <p>
+        Esta fórmula calcula la velocidad ajustando según los desarrollos reales y el tamaño exacto de rueda incluyendo el neumático.
+      </p>
+    </section>
+  </div>
+
+  <script>
+    const platosDisponibles = [32, 34, 36, 38, 40, 42, 44, 46];
+    const neumaticosDisponibles = [32, 35, 38, 40, 42, 45, 47, 50];
+    const piñones = [10, 11, 12, 13, 15, 17, 19, 21, 24, 28, 32, 52];
+
+    const platosDiv = document.getElementById("platos");
+    const neumaticosDiv = document.getElementById("neumaticos");
+    const tablaResultados = document.getElementById("tabla-resultados");
+    const cadenciaMinInput = document.getElementById("cadenciaMin");
+    const cadenciaMaxInput = document.getElementById("cadenciaMax");
+    const valCadMin = document.getElementById("valCadMin");
+    const valCadMax = document.getElementById("valCadMax");
+
+    function renderSelectores() {
+      platosDisponibles.forEach(d => {
+        const lbl = document.createElement("label");
+        lbl.innerHTML = `<input type="checkbox" value="${d}"><span>${d}</span>`;
+        platosDiv.appendChild(lbl);
+      });
+
+      neumaticosDisponibles.forEach(d => {
+        const lbl = document.createElement("label");
+        lbl.innerHTML = `<input type="radio" name="neumatico" value="${d}"><span>${d} mm</span>`;
+        neumaticosDiv.appendChild(lbl);
+      });
+    }
+
+    function calcularYRenderizarTabla() {
+      const platos = [...platosDiv.querySelectorAll("input:checked")].map(e => +e.value);
+      const neumatico = +neumaticosDiv.querySelector("input:checked")?.value || null;
+      const cadMin = +cadenciaMinInput.value;
+      const cadMax = +cadenciaMaxInput.value;
+
+      valCadMin.textContent = cadMin;
+      valCadMax.textContent = cadMax;
+
+      if (!platos.length || !neumatico) {
+        tablaResultados.innerHTML = "";
+        return;
+      }
+
+      const D = (700 + neumatico * 2) / 1000; // en metros
+      const C = Math.PI * D;
+      let html = "<table><thead><tr><th>Piñón</th>";
+      platos.forEach(p => html += `<th>${p}</th>`);
+      html += "</tr></thead><tbody>";
+
+      piñones.forEach(pn => {
+        html += `<tr><td><b>${pn}</b></td>`;
+        platos.forEach(pl => {
+          const metros = (pl / pn) * C;
+          const velocidadMin = (cadMin * metros * 60) / 1000;
+          const velocidadMax = (cadMax * metros * 60) / 1000;
+          html += `<td><div>${metros.toFixed(2)} m</div><div>${velocidadMin.toFixed(1)}–${velocidadMax.toFixed(1)} km/h</div></td>`;
+        });
+        html += "</tr>";
+      });
+      html += "</tbody></table>";
+      tablaResultados.innerHTML = html;
+    }
+
+    renderSelectores();
+    platosDiv.addEventListener("change", calcularYRenderizarTabla);
+    neumaticosDiv.addEventListener("change", calcularYRenderizarTabla);
+    cadenciaMinInput.addEventListener("input", calcularYRenderizarTabla);
+    cadenciaMaxInput.addEventListener("input", calcularYRenderizarTabla);
+  </script>
+</body>
+</html>
