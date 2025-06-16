@@ -131,9 +131,3 @@ neumaticosDiv.addEventListener('change', calcularYRenderizarTabla);
 cadenciaMinInput.addEventListener('input', ajustarCadenciaMin);
 cadenciaMaxInput.addEventListener('input', ajustarCadenciaMax);
 
-renderSelectores();
-platosDiv.addEventListener('change', calcularYRenderizarTabla);
-neumaticosDiv.addEventListener('change', calcularYRenderizarTabla);
-cadenciaMinInput.addEventListener('input', calcularYRenderizarTabla);
-cadenciaMaxInput.addEventListener('input', calcularYRenderizarTabla);
-
